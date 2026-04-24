@@ -143,8 +143,11 @@ public class OnlineStore {
                     findByName(scanner.nextLine());
                 }
                 case ("c") -> {
-                    System.out.println("Please enter the price:");
-                    findByPrice(Double.parseDouble(scanner.nextLine()));
+                    System.out.println("What is the maximum price: ");
+                    double max = Double.parseDouble( scanner.nextLine());
+                    System.out.println("What is the minium price: ");
+                    double min = Double.parseDouble( scanner.nextLine());
+                    findByPrice(max, min);
                 }
                 case ("d") -> {
                     System.out.println("Please enter the department:");
@@ -181,9 +184,11 @@ public class OnlineStore {
         }
     }
 
-    public static void findByPrice(double price) {
+    public static void findByPrice(double max , double min) {
+
+
         for (Product product : inventory.values()) {
-            if (product.getPrice() == price) {
+            if (product.getPrice() >= min && product.getPrice() <= max) {
                 String sku = product.getSku();
                 displayProduct(sku);
             }
