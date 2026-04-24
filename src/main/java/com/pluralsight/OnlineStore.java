@@ -85,19 +85,17 @@ public class OnlineStore {
         do {System.out.println(menu);
             String input = scanner.nextLine();
             switch (input.toLowerCase()) {
-                case "a" -> {
+                case "a" ->
                     checkOut();
-                }
                 case "b" -> {
                     System.out.println("Please enter the SKI");
                     remove(scanner.nextLine());
                 }
-                case "c" ->{
+                case "c" ->
                     displayCart();
-                }
-                case "d" ->{
+                case "d" ->
                     running=false;
-                }
+
             }
         } while (running);
 
