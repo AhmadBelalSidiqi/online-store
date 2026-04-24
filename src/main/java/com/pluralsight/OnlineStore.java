@@ -176,7 +176,7 @@ public class OnlineStore {
 
     public static void findByName(String name) {
         for (Product product : inventory.values()) {
-            if (product.getName().equalsIgnoreCase(name)) {
+            if (product.getName().toLowerCase().contains(name.toLowerCase())) {
                 String sku = product.getSku();
                 displayProduct(sku);
             }
