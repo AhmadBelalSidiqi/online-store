@@ -13,14 +13,13 @@ public class OnlineStore {
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        homeScreen();
+        mainMenu();
         System.out.println("Thank for you using the app.");
-
 
     }
 
-
-    public static void homeScreen() {
+    // main menu and sub menus
+    public static void mainMenu() {
         String menu = """
                 ---------- Hello welcome to your shop --------
                 Please chose one of the following option:
@@ -36,13 +35,39 @@ public class OnlineStore {
             switch (input.toLowerCase()) {
                 case "a" -> {
                     displayAllProducts();
-                    displayMenu();
+                    displayProductMenu();
                 }
                 case "b" -> {
                     displayCart();
                     displayCartMenu();
                 }
                 case "c" -> running = false;
+
+            }
+        } while (running);
+    }
+
+    public static void displayProductMenu() {
+        Scanner scanner = new Scanner(System.in);
+        String menu = """
+                \n
+                Please chose one of the following options:
+                A- Search a product
+                B- Add a product
+                C- Go back
+                """;
+        boolean running = true;
+        do {
+            System.out.println(menu);
+            String input = scanner.nextLine();
+            switch (input.toLowerCase()) {
+                case ("a") -> searchProduct();
+
+                case ("b") -> addProduct();
+
+                case ("c") -> running = false;
+
+                default -> System.out.println("Wrong Input");
 
             }
         } while (running);
@@ -77,38 +102,7 @@ public class OnlineStore {
         } while (running);
 
     }
-
     // TODO: Create check out system
-    public static void checkOut() {
-        System.out.println("Check out successfully ");
-        displayCart();
-        System.out.println("your payment was successful");
-    }
-
-    public static void displayCart() {
-        System.out.println("here is your cart");
-        double total = 0;
-        for (ShoppingCart s : cart.values()) {
-            System.out.println("Name: " + s.getName()
-                    + "\tPrice: " + s.getPrice()
-                    + "\tCount: " + s.getCount());
-            total += s.getPrice();
-        }
-        System.out.println("total: " + total);
-
-    }
-
-    public static void displayAllProducts() {
-        System.out.println("SKI \tName \t\t\t\t\t\t\tPrice  \t Department ");
-        for (Product product : inventory.values()) {
-            System.out.println(product.getSku()
-                    + "|\t" + product.getName()
-                    + "|\t" + product.getPrice()
-                    + "$|\t" + product.getDepartment());
-
-        }
-    }
-
     public static void displayProduct(String sku) {
         Product product = inventory.get(sku);
         String result = "SKU- " + product.getSku()
@@ -118,98 +112,14 @@ public class OnlineStore {
         System.out.println(result);
     }
 
-    public static void findBySku(String sku) {
-        displayProduct(sku);
-    }
-
-    public static void findByName(String name) {
+    public static void displayAllProducts() {
+        System.out.println("SKI \t\tName \t\t\t\t\t\t\t\t\tPrice  \t Department ");
         for (Product product : inventory.values()) {
-            if (product.getName().equalsIgnoreCase(name)) {
-                String sku = product.getSku();
-                displayProduct(sku);
-            }
+            System.out.printf("%-9s\t%-35s\t %8.2f\t%-15s%n",product.getSku(),product.getName(),product.getPrice(),product.getDepartment());
         }
     }
 
-    public static void findByPrice(double price) {
-        for (Product product : inventory.values()) {
-            if (product.getPrice() == price) {
-                String sku = product.getSku();
-                displayProduct(sku);
-            }
-        }
-    }
-
-    public static void findByDepartment(String dept) {
-        int count = 1;
-        for (Product product : inventory.values()) {
-            if (product.getDepartment().equalsIgnoreCase(dept)) {
-                System.out.println(count++ + "#");
-                String sku = product.getSku();
-                displayProduct(sku);
-            }
-        }
-    }
-
-    public static void addToCart(String sku) {
-        if (isThere(sku)) {
-            cart.get(sku).addOne();
-        } else {
-            String name = inventory.get(sku).getName();
-            double price = inventory.get(sku).getPrice();
-            cart.put(sku, new ShoppingCart(sku, name, price, 1));
-        }
-
-    }
-
-    public static boolean isThere(String sku) {
-        for (String s : cart.keySet()) {
-            if (sku.equalsIgnoreCase(s)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static void remove(String sku) {
-        if (isThere(sku)) {
-            cart.get(sku).removeOne();
-        } else {
-            cart.remove(sku);
-        }
-
-    }
-
-    // TODO: use do/while loop instead of calling the method.
-
-    public static void displayMenu() {
-        Scanner scanner = new Scanner(System.in);
-        String menu = """
-                \n
-                Please chose one of the following options:
-                A- Search a product
-                B- Add a product
-                C- Go back
-                """;
-        boolean running = true;
-        do {
-            System.out.println(menu);
-            String input = scanner.nextLine();
-            switch (input.toLowerCase()) {
-                case ("a") -> searchProduct();
-
-                case ("b") -> addProduct();
-
-                case ("c") -> running = false;
-
-                default -> System.out.println("Wrong Input");
-
-            }
-        } while (running);
-
-
-    }
-
+    // Search the products
     public static void searchProduct() {
         String menu = """
                 Please chose one of the following:
@@ -249,11 +159,93 @@ public class OnlineStore {
         } while (running);
     }
 
+    public static void addToCart(String sku) {
+        if (isThere(sku)) {
+            cart.get(sku).addOne();
+        } else {
+            String name = inventory.get(sku).getName();
+            double price = inventory.get(sku).getPrice();
+            cart.put(sku, new ShoppingCart(sku, name, price, 1));
+        }
+
+    }
+
+    public static void findBySku(String sku) {
+        displayProduct(sku);
+    }
+
+    public static void findByName(String name) {
+        for (Product product : inventory.values()) {
+            if (product.getName().equalsIgnoreCase(name)) {
+                String sku = product.getSku();
+                displayProduct(sku);
+            }
+        }
+    }
+
+    public static void findByPrice(double price) {
+        for (Product product : inventory.values()) {
+            if (product.getPrice() == price) {
+                String sku = product.getSku();
+                displayProduct(sku);
+            }
+        }
+    }
+
+    public static void findByDepartment(String dept) {
+        int count = 1;
+        for (Product product : inventory.values()) {
+            if (product.getDepartment().equalsIgnoreCase(dept)) {
+                System.out.println(count++ + "#");
+                String sku = product.getSku();
+                displayProduct(sku);
+            }
+        }
+    }
+
     public static void addProduct() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Please enter the SKU of the product");
         String sku = scanner.nextLine();
         addToCart(sku);
+    }
+
+    // Check out
+    public static void displayCart() {
+        System.out.println("here is your cart");
+        double total = 0;
+        for (ShoppingCart s : cart.values()) {
+            System.out.println("Name: " + s.getName()
+                    + "\tPrice: " + s.getPrice()
+                    + "\tCount: " + s.getCount());
+            total += s.getPrice();
+        }
+        System.out.println("total: " + total);
+
+    }
+
+    public static boolean isThere(String sku) {
+        for (String key : cart.keySet()) {
+            if (sku.equalsIgnoreCase(key)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void remove(String sku) {
+        if (isThere(sku)) {
+            cart.get(sku).removeOne();
+        } else {
+            cart.remove(sku);
+        }
+
+    }
+
+    public static void checkOut() {
+        System.out.println("Check out successfully ");
+        displayCart();
+        System.out.println("Your payment was successful");
     }
 
     public static HashMap<String, Product> loadInventory(String fileLocation) {
